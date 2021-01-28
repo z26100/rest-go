@@ -20,7 +20,6 @@ type RestServer struct {
 
 type ServerConfig struct {
 	Listen                    string
-	ProductionMode            bool
 	CertFile, KeyFile         string
 	ReadTimeout, WriteTimeout time.Duration
 	TlsConfig                 *tls.Config

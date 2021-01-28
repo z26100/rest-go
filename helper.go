@@ -3,23 +3,13 @@ package rest
 import (
 	"crypto/tls"
 	log "github.com/z26100/log-go"
-	flag "github.com/z26100/service-config-go"
 	"net/http"
 	"time"
 )
 
 const (
-	defaultTimeout = 120 * time.Second
+	defaultTimeout = 15 * time.Second
 	defaultListen  = "0.0.0.0:8080"
-)
-
-var (
-	restListen       = flag.String("listen", defaultListen, "the web server address:port")
-	restReadTimeout  = flag.Duration("readTimeout", defaultTimeout, "the http read timeout")
-	restWriteTimeout = flag.Duration("writeTimeout", defaultTimeout, "the http write timeout")
-	debug            = flag.Bool("debug", false, "debug mode")
-	keyFile          = flag.String("keyFile", "", "the tls key file")
-	crtFile          = flag.String("certFile", "", "the tls cert file")
 )
 
 func Config() ServerConfig {
@@ -28,13 +18,10 @@ func Config() ServerConfig {
 
 func DefaultRestConfig() ServerConfig {
 	return ServerConfig{
-		Listen:         *restListen,
-		ProductionMode: !*debug,
-		CertFile:       *crtFile,
-		KeyFile:        *keyFile,
-		ReadTimeout:    *restReadTimeout,
-		WriteTimeout:   *restWriteTimeout,
-		TlsConfig:      DefaultTlsConfig(),
+		Listen:       defaultListen,
+		ReadTimeout:  defaultTimeout,
+		WriteTimeout: defaultTimeout,
+		TlsConfig:    DefaultTlsConfig(),
 	}
 }
 
