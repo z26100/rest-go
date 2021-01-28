@@ -6,7 +6,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 	auth "github.com/z26100/auth-go"
-	"log"
+	log "github.com/z26100/log-go"
 	"net/http"
 	"strings"
 	"time"
@@ -38,6 +38,10 @@ type Route struct {
 	REST Server
  *****************/
 func RunRestServer(routes []Route, pathPrefix string, cors bool, serverConfig ServerConfig) {
+	log.Infof("listen:\t\t%s", serverConfig.Listen)
+	log.Infof("prefix:\t\t%s", pathPrefix)
+	log.Infof("cors:\t\t%t", cors)
+
 	server := NewDefaultServer(routes, serverConfig)
 	err := server.Listen(pathPrefix, cors)
 	if err != nil {
