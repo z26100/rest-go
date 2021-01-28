@@ -20,6 +20,8 @@ type RestServer struct {
 
 type ServerConfig struct {
 	Listen                    string
+	PathPrefix                string
+	Cors                      bool
 	CertFile, KeyFile         string
 	ReadTimeout, WriteTimeout time.Duration
 	TlsConfig                 *tls.Config
@@ -36,13 +38,13 @@ type Route struct {
 /*****************
 	REST Server
  *****************/
-func RunRestServer(routes []Route, pathPrefix string, cors bool, serverConfig ServerConfig) {
+func RunRestServer(routes []Route, serverConfig ServerConfig) {
 	log.Infof("listen:\t\t%s", serverConfig.Listen)
-	log.Infof("prefix:\t\t%s", pathPrefix)
-	log.Infof("cors:\t\t%t", cors)
+	log.Infof("prefix:\t\t%s", serverConfig.PathPrefix)
+	log.Infof("cors:\t\t%t", serverConfig.Cors)
 
 	server := NewDefaultServer(routes, serverConfig)
-	err := server.Listen(pathPrefix, cors)
+	err := server.Listen(serverConfig.PathPrefix, serverConfig.Cors)
 	if err != nil {
 		log.Fatal(err)
 	}
