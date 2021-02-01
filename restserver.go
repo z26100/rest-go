@@ -28,6 +28,7 @@ type ServerConfig struct {
 	TlsConfig                 *tls.Config
 	Auth                      bool
 	TokenHandler              TokenHandler
+	Debug                     bool
 }
 
 type Route struct {
@@ -44,6 +45,7 @@ func RunRestServer(routes []Route, serverConfig ServerConfig) {
 	log.Infof("listen:\t\t%s", serverConfig.Listen)
 	log.Infof("prefix:\t\t%s", serverConfig.PathPrefix)
 	log.Infof("cors:\t\t%t", serverConfig.Cors)
+	log.Infof("debug:\t\t%t", serverConfig.Debug)
 
 	server := NewDefaultServer(routes, serverConfig)
 	err := server.Listen(serverConfig.PathPrefix, serverConfig.Cors)
@@ -76,6 +78,9 @@ func NewDefaultServer(routes []Route, config ServerConfig) *RestServer {
 func (s *RestServer) Listen(pathPrefix string, corsAllowed bool) error {
 	var handler http.Handler
 	handler = s.r
+	if s.config.Debug {
+		handler = log.Handler(handler)
+	}
 	if s.config.Auth {
 		handler = s.config.TokenHandler(handler)
 		log.Printf("auth enabled")
