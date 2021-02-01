@@ -5,7 +5,6 @@ import (
 	"crypto/tls"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
-	auth "github.com/z26100/auth-go"
 	log "github.com/z26100/log-go"
 	"net/http"
 	"strings"
@@ -18,6 +17,8 @@ type RestServer struct {
 	config ServerConfig
 }
 
+type TokenHandler func(http.Handler) http.Handler
+
 type ServerConfig struct {
 	Listen                    string
 	PathPrefix                string
@@ -25,7 +26,8 @@ type ServerConfig struct {
 	CertFile, KeyFile         string
 	ReadTimeout, WriteTimeout time.Duration
 	TlsConfig                 *tls.Config
-	JwtVerifier               *auth.JwtVerifier
+	Auth                      bool
+	TokenHandler              TokenHandler
 }
 
 type Route struct {
@@ -72,12 +74,11 @@ func NewDefaultServer(routes []Route, config ServerConfig) *RestServer {
 }
 
 func (s *RestServer) Listen(pathPrefix string, corsAllowed bool) error {
-
 	var handler http.Handler
 	handler = s.r
-	if s.config.JwtVerifier != nil {
-		handler = auth.CheckJwtToken(s.config.JwtVerifier, auth.NewDefaultAuth().DefaultJwtClaimHandler, handler)
-		log.Printf("auth checker enabled")
+	if s.config.Auth {
+		handler = s.config.TokenHandler(handler)
+		log.Printf("auth enabled")
 	}
 	if pathPrefix != "" {
 		handler = http.StripPrefix(pathPrefix, handler)
@@ -109,6 +110,5 @@ func (s *RestServer) Listen(pathPrefix string, corsAllowed bool) error {
 }
 
 func (s RestServer) Shutdown(ctx context.Context) error {
-	s.srv.Shutdown(ctx)
-	return nil
+	return s.srv.Shutdown(ctx)
 }
