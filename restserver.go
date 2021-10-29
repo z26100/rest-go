@@ -91,11 +91,7 @@ func (s *RestServer) Listen(pathPrefix string, corsAllowed bool) error {
 	}
 	if corsAllowed {
 		log.Println("enable cors")
-		c := cors.New(cors.Options{
-			AllowedOrigins:   []string{"*"},
-			AllowCredentials: true,
-			AllowedMethods:   []string{"OPTIONS", "GET", "PUT", "POST", "DELETE"},
-		})
+		c := cors.AllowAll()
 		handler = c.Handler(handler)
 	}
 	log.Printf("listening at %s", s.config.Listen)

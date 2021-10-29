@@ -58,4 +58,5 @@ func CheckError(err error, w http.ResponseWriter) bool {
 func EnableCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 	(*w).Header().Set("Access-Control-Allow-Methods", "*")
+	(*w).Header().Set("Access-Control-Allow-Credentials", "true")
 }
