@@ -75,9 +75,12 @@ func NewDefaultServer(routes []Route, config ServerConfig) *RestServer {
 	return &s
 }
 
-func (s *RestServer) Listen(pathPrefix string, corsAllowed bool) error {
+func (s *RestServer) Listen(pathPrefix string, corsAllowed bool, preHandlers ...func(handler http.Handler) http.Handler) error {
 	var handler http.Handler
 	handler = s.r
+	for _, preHandler := range preHandlers {
+		handler = preHandler(handler)
+	}
 	if s.config.Debug {
 		handler = log.Handler(handler)
 	}
