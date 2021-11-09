@@ -113,3 +113,7 @@ func (s *RestServer) Listen(pathPrefix string, corsAllowed bool) error {
 func (s RestServer) Shutdown(ctx context.Context) error {
 	return s.srv.Shutdown(ctx)
 }
+
+func (s RestServer) GetRouter() *mux.Router {
+	return s.r
+}
