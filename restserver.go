@@ -5,7 +5,7 @@ import (
 	"crypto/tls"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
-	log "github.com/z26100/log-go"
+	"github.com/z26100/log-go"
 	"net/http"
 	"strings"
 	"time"
@@ -42,6 +42,7 @@ type Route struct {
 	REST Server
  *****************/
 func RunRestServer(routes []Route, serverConfig ServerConfig) {
+
 	log.Infof("listen:\t\t%s", serverConfig.Listen)
 	log.Infof("prefix:\t\t%s", serverConfig.PathPrefix)
 	log.Infof("cors:\t\t%t", serverConfig.Cors)
