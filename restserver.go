@@ -38,9 +38,12 @@ type Route struct {
 	Methods    string
 }
 
-/*****************
-	REST Server
- *****************/
+/*
+****************
+
+		REST Server
+	 ****************
+*/
 func RunRestServer(routes []Route, serverConfig ServerConfig) {
 
 	log.Infof("listen:\t\t%s", serverConfig.Listen)
@@ -83,7 +86,7 @@ func (s *RestServer) Listen(pathPrefix string, corsAllowed bool, preHandlers ...
 		handler = preHandler(handler)
 	}
 	if s.config.Debug {
-		handler = log.Handler(handler)
+		log.LogLevel = log.DEBUG
 	}
 	if s.config.Auth {
 		handler = s.config.TokenHandler(handler)
